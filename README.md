@@ -22,6 +22,8 @@ A refusal is not proven until it leaves a replayable receipt.
 | `sample_allow_receipt.json` | Example receipt where authority and admissibility permit consequence to bind |
 | `sample_deny_receipt.json` | Example receipt where missing authority prevents consequence from binding |
 | `replay.py` | Minimal verifier that recomputes the receipt hash and checks the decision rule |
+| `tests/test_receipts.py` | Positive and negative tests for schema, replay, consequence binding, and refusal effect |
+| `.github/workflows/ci.yml` | CI workflow for replay checks and validation tests |
 
 ---
 
@@ -84,9 +86,40 @@ The verifier checks:
 
 ---
 
+## Tests
+
+Install the test dependency:
+
+```bash
+python -m pip install jsonschema
+```
+
+Run:
+
+```bash
+python -m unittest discover -s tests
+```
+
+The tests check:
+
+- valid ALLOW receipt
+- valid DENY receipt
+- DENY receipt links to the previous ALLOW receipt hash
+- ALLOW with missing authority fails
+- DENY without `refusal_effect` fails
+- DENY with `consequence_bound=true` fails
+
+---
+
 ## Claim boundary
 
 This repo proves only a minimal refusal receipt chain.
+
+It proves that a receipt, once produced, can be checked against a minimal decision rule and replayed.
+
+This repo does not prove that all consequence paths are forced through this receipt chain.
+
+A separate enforcement adapter would be required to prove that consequence-producing actions cannot bypass the receipt boundary.
 
 It does not prove:
 
@@ -96,10 +129,11 @@ It does not prove:
 - adoption
 - standard status
 - complete consequence-governance architecture
+- total path control
 
 It is a small proof surface:
 
-> receipt schema → ALLOW / DENY examples → replay verifier
+> receipt schema → ALLOW / DENY examples → replay verifier → tests → CI
 
 ---
 
