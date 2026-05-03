@@ -10,6 +10,8 @@ If the action is allowed, the receipt records why consequence was permitted to b
 
 If the action is denied, the receipt records why consequence did not bind.
 
+If the action is held, the receipt records why consequence cannot bind yet.
+
 A refusal is not proven until it leaves a replayable receipt.
 
 ---
@@ -21,8 +23,9 @@ A refusal is not proven until it leaves a replayable receipt.
 | `receipt_schema_v0.1.json` | Minimal JSON Schema for ALLOW / DENY / HOLD receipts |
 | `sample_allow_receipt.json` | Example receipt where authority and admissibility permit consequence to bind |
 | `sample_deny_receipt.json` | Example receipt where missing authority prevents consequence from binding |
+| `sample_hold_receipt.json` | Example receipt where unknown admissibility prevents consequence from binding yet |
 | `replay.py` | Minimal verifier that recomputes the receipt hash and checks the decision rule |
-| `tests/test_receipts.py` | Positive and negative tests for schema, replay, consequence binding, and refusal effect |
+| `tests/test_receipts.py` | Positive and negative tests for schema, replay, consequence binding, refusal effect, tamper, and chain mismatch |
 | `.github/workflows/ci.yml` | CI workflow for replay checks and validation tests |
 
 ---
@@ -69,6 +72,7 @@ Run:
 ```bash
 python replay.py sample_allow_receipt.json
 python replay.py sample_deny_receipt.json
+python replay.py sample_hold_receipt.json
 ```
 
 Expected result:
@@ -97,17 +101,21 @@ python -m pip install jsonschema
 Run:
 
 ```bash
-python -m unittest discover -s tests
+python -m unittest discover -s tests -t .
 ```
 
 The tests check:
 
 - valid ALLOW receipt
 - valid DENY receipt
-- DENY receipt links to the previous ALLOW receipt hash
+- valid HOLD receipt
+- receipt chain links ALLOW → DENY → HOLD
 - ALLOW with missing authority fails
 - DENY without `refusal_effect` fails
 - DENY with `consequence_bound=true` fails
+- HOLD with known admissibility fails
+- tampered receipt body fails hash replay
+- chain mismatch is detectable by comparing expected previous receipt hash
 
 ---
 
@@ -133,7 +141,7 @@ It does not prove:
 
 It is a small proof surface:
 
-> receipt schema → ALLOW / DENY examples → replay verifier → tests → CI
+> receipt schema → ALLOW / DENY / HOLD examples → replay verifier → tests → CI
 
 ---
 
