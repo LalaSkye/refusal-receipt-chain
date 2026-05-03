@@ -25,5 +25,8 @@ jobs:
       - name: Replay DENY receipt
         run: python replay.py sample_deny_receipt.json
 
+      - name: Replay HOLD receipt
+        run: python replay.py sample_hold_receipt.json
+
       - name: Run validation tests
-        run: python -m unittest discover -s tests
+        run: python -m unittest discover -s tests -t .
