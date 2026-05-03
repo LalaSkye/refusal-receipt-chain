@@ -1,0 +1,18 @@
+{
+  "receipt_id": "receipt-hold-001",
+  "decision_time_utc": "2026-05-03T11:32:00Z",
+  "decision_state": "HOLD",
+  "action_type": "WRITE_RECORD",
+  "actor_id": "human-operator-003",
+  "authority_state": "VALID",
+  "admissibility_state": "UNKNOWN",
+  "policy_id": "policy-minimal-v0.1",
+  "policy_hash": "sha256:a8e07456cbab1e2e8920ba602602564f755d4138cdf3debfd20bfc99f405860e",
+  "input_hash": "sha256:55c4702b47570b07d3dd93512f324c9d128e9f5f1c73014dc923459e6c8f360e",
+  "decision_reason_code": "ADMISSIBILITY_UNKNOWN",
+  "decision_reason_text": "Required evidence is unavailable, so consequence is held and not allowed to bind.",
+  "consequence_bound": false,
+  "previous_receipt_hash": "sha256:bbce9fe08eecd2585e7bd6b1ee9a0153d705a928ee406f58f88f1cbf63ada2e7",
+  "receipt_hash": "sha256:23a49739e520795dbada28b6400f31474c7bb0f7a2db296446b0a8fca1fc2924",
+  "replay_reference": "replay-cases/case-hold-001"
+}
