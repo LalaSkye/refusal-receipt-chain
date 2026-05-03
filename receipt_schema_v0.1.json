@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/LalaSkye/refusal-receipt-chain/receipt_schema_v0.1.json",
+  "title": "Refusal Receipt Chain Receipt v0.1",
+  "description": "Minimal receipt object for proving an attempted consequence was allowed, denied, or held at an execution boundary.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receipt_id",
+    "decision_time_utc",
+    "decision_state",
+    "action_type",
+    "actor_id",
+    "authority_state",
+    "admissibility_state",
+    "policy_id",
+    "policy_hash",
+    "input_hash",
+    "decision_reason_code",
+    "decision_reason_text",
+    "consequence_bound",
+    "previous_receipt_hash",
+    "receipt_hash",
+    "replay_reference"
+  ],
+  "properties": {
+    "receipt_id": {"type": "string", "minLength": 1},
+    "decision_time_utc": {"type": "string", "format": "date-time"},
+    "decision_state": {"type": "string", "enum": ["ALLOW", "DENY", "HOLD"]},
+    "action_type": {"type": "string", "minLength": 1},
+    "actor_id": {"type": "string", "minLength": 1},
+    "authority_state": {"type": "string", "enum": ["VALID", "INVALID", "MISSING", "EXPIRED"]},
+    "admissibility_state": {"type": "string", "enum": ["ADMISSIBLE", "INADMISSIBLE", "UNKNOWN"]},
+    "policy_id": {"type": "string", "minLength": 1},
+    "policy_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "input_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "decision_reason_code": {
+      "type": "string",
+      "enum": [
+        "AUTHORITY_VALID",
+        "AUTHORITY_MISSING",
+        "AUTHORITY_INVALID",
+        "AUTHORITY_EXPIRED",
+        "ACTION_INADMISSIBLE",
+        "POLICY_MISMATCH",
+        "STATE_UNKNOWN",
+        "ADMISSIBILITY_UNKNOWN"
+      ]
+    },
+    "decision_reason_text": {"type": "string", "minLength": 1},
+    "consequence_bound": {"type": "boolean"},
+    "refusal_effect": {
+      "type": "string",
+      "enum": ["ACTION_NOT_EXECUTED", "MUTATION_BLOCKED", "EXTERNAL_EFFECT_PREVENTED"]
+    },
+    "previous_receipt_hash": {"type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$"},
+    "receipt_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "replay_reference": {"type": "string", "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"decision_state": {"const": "ALLOW"}}},
+      "then": {
+        "properties": {
+          "authority_state": {"const": "VALID"},
+          "admissibility_state": {"const": "ADMISSIBLE"},
+          "consequence_bound": {"const": true}
+        },
+        "not": {"required": ["refusal_effect"]}
+      }
+    },
+    {
+      "if": {"properties": {"decision_state": {"const": "DENY"}}},
+      "then": {
+        "required": ["refusal_effect"],
+        "properties": {"consequence_bound": {"const": false}}
+      }
+    },
+    {
+      "if": {"properties": {"decision_state": {"const": "HOLD"}}},
+      "then": {
+        "properties": {
+          "admissibility_state": {"const": "UNKNOWN"},
+          "consequence_bound": {"const": false}
+        }
+      }
+    }
+  ]
+}
