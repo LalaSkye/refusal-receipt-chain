@@ -1,0 +1,18 @@
+{
+  "receipt_id": "receipt-allow-001",
+  "decision_time_utc": "2026-05-03T11:30:00Z",
+  "decision_state": "ALLOW",
+  "action_type": "WRITE_RECORD",
+  "actor_id": "human-operator-001",
+  "authority_state": "VALID",
+  "admissibility_state": "ADMISSIBLE",
+  "policy_id": "policy-minimal-v0.1",
+  "policy_hash": "sha256:a8e07456cbab1e2e8920ba602602564f755d4138cdf3debfd20bfc99f405860e",
+  "input_hash": "sha256:d76cc23f803e1c9a1c3aeb9e3ba52020a0c4e75a040b6956d93b00c85a23ed0a",
+  "decision_reason_code": "AUTHORITY_VALID",
+  "decision_reason_text": "Authority is valid and action is admissible at decision time.",
+  "consequence_bound": true,
+  "previous_receipt_hash": null,
+  "receipt_hash": "sha256:6a3ac8032297c1293f067bc6a0170dbc884d0868ff00545a7d1eead5dbb658d9",
+  "replay_reference": "replay-cases/case-allow-001"
+}
