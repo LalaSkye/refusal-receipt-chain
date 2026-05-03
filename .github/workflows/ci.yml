@@ -1,0 +1,29 @@
+name: refusal-receipt-chain-ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test dependency
+        run: python -m pip install jsonschema
+
+      - name: Replay ALLOW receipt
+        run: python replay.py sample_allow_receipt.json
+
+      - name: Replay DENY receipt
+        run: python replay.py sample_deny_receipt.json
+
+      - name: Run validation tests
+        run: python -m unittest discover -s tests
