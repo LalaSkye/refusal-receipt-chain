@@ -1,4 +1,6 @@
 {
+  "schema_version": "0.1",
+  "receipt_version": "0.1",
   "receipt_id": "receipt-deny-001",
   "decision_time_utc": "2026-05-03T11:31:00Z",
   "decision_state": "DENY",
@@ -7,13 +9,13 @@
   "authority_state": "MISSING",
   "admissibility_state": "ADMISSIBLE",
   "policy_id": "policy-minimal-v0.1",
-  "policy_hash": "sha256:a8e07456cbab1e2e8920ba602602564f755d4138cdf3debfd20bfc99f405860e",
+  "policy_hash": "sha256:7b247eac08d1afa664039ef85d6a5d08f4f30863a82b3b60a9600a404e4be5b7",
   "input_hash": "sha256:5a7dbd642c5aaee001eaf5fd2a83a93cc0f7e3c5068a954c6e24f7061f2ea400",
   "decision_reason_code": "AUTHORITY_MISSING",
   "decision_reason_text": "Authority is missing, so consequence is not allowed to bind.",
   "consequence_bound": false,
   "refusal_effect": "ACTION_NOT_EXECUTED",
-  "previous_receipt_hash": "sha256:6a3ac8032297c1293f067bc6a0170dbc884d0868ff00545a7d1eead5dbb658d9",
-  "receipt_hash": "sha256:bbce9fe08eecd2585e7bd6b1ee9a0153d705a928ee406f58f88f1cbf63ada2e7",
+  "previous_receipt_hash": "sha256:ed62f791119690f145b1049b685908b52ff9693af1a6b1f8efdaaa46789d668c",
+  "receipt_hash": "sha256:1cf23c8b7e58c247f25586fd81c5a2fe1a0e6f0604d0c0aa1f651f4f20f46141",
   "replay_reference": "replay-cases/case-deny-001"
 }
