@@ -1,0 +1,28 @@
+{
+  "policy_id": "policy-minimal-v0.1",
+  "policy_version": "0.1",
+  "description": "Minimal decision policy for refusal receipt chain v0.1.",
+  "rules": {
+    "ALLOW": {
+      "requires": {
+        "authority_state": "VALID",
+        "admissibility_state": "ADMISSIBLE"
+      },
+      "consequence_bound": true
+    },
+    "DENY": {
+      "triggers": {
+        "authority_state": ["INVALID", "MISSING", "EXPIRED"],
+        "admissibility_state": ["INADMISSIBLE"]
+      },
+      "consequence_bound": false,
+      "requires_refusal_effect": true
+    },
+    "HOLD": {
+      "triggers": {
+        "admissibility_state": ["UNKNOWN"]
+      },
+      "consequence_bound": false
+    }
+  }
+}
