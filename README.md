@@ -1,5 +1,9 @@
 # refusal-receipt-chain
 
+**Proof surface, not a safety system.**
+
+This repo demonstrates post-hoc verification of refusal receipts. It does not claim live interception, production deployment, compliance, prevention, or external audit.
+
 A minimal public proof artefact for refusal receipts.
 
 This repo shows one narrow thing:
