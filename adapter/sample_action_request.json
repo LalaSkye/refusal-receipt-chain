@@ -1,0 +1,9 @@
+{
+  "request_id": "action-request-001",
+  "action_type": "WRITE_RECORD",
+  "actor_id": "human-operator-001",
+  "payload": {
+    "record_id": "record-001",
+    "value": "minimal-receipt-gated-write"
+  }
+}
