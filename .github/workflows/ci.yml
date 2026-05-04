@@ -31,5 +31,8 @@ jobs:
       - name: Verify ALLOW -> DENY -> HOLD chain
         run: python chain_verify.py sample_allow_receipt.json sample_deny_receipt.json sample_hold_receipt.json
 
+      - name: Run receipt-gated adapter with ALLOW receipt
+        run: python -m adapter.enforcement_adapter adapter/sample_action_request.json sample_allow_receipt.json
+
       - name: Run validation tests
         run: python -m unittest discover -s tests -t .
