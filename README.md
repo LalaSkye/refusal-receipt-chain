@@ -25,8 +25,12 @@ A refusal is not proven until it leaves a replayable receipt.
 | `sample_deny_receipt.json` | Example receipt where missing authority prevents consequence from binding |
 | `sample_hold_receipt.json` | Example receipt where unknown admissibility prevents consequence from binding yet |
 | `replay.py` | Minimal verifier that recomputes the receipt hash and checks the decision rule |
+| `chain_verify.py` | Chain verifier that checks ordered receipt hash linkage via `previous_receipt_hash` |
 | `tests/test_receipts.py` | Positive and negative tests for schema, replay, consequence binding, refusal effect, tamper, and chain mismatch |
-| `.github/workflows/ci.yml` | CI workflow for replay checks and validation tests |
+| `tests/test_chain_verify.py` | Positive and negative tests for chain hash linkage, tamper detection, ordering, and body corruption |
+| `requirements.txt` | Pinned dependency: `jsonschema>=4.0.0,<5.0.0` |
+| `.github/workflows/ci.yml` | CI workflow for replay checks, chain verification, and validation tests |
+| `CHANGELOG.md` | Version history |
 
 ---
 
@@ -49,17 +53,14 @@ No consequence-producing action executes without a receipt-bearing decision.
 ## Minimal decision rule
 
 `ALLOW` only if:
-
 - `authority_state = VALID`
 - `admissibility_state = ADMISSIBLE`
 
 `DENY` if:
-
 - `authority_state = INVALID / MISSING / EXPIRED`
 - or `admissibility_state = INADMISSIBLE`
 
 `HOLD` if:
-
 - `admissibility_state = UNKNOWN`
 - or required evidence is unavailable
 
@@ -90,12 +91,36 @@ The verifier checks:
 
 ---
 
-## Tests
+## Chain verification
 
-Install the test dependency:
+`chain_verify.py` accepts an ordered list of receipt JSON files and checks:
+
+1. Each receipt's `receipt_hash` matches its canonical body.
+2. Each receipt's `previous_receipt_hash` equals the prior receipt's `receipt_hash`.
+3. The first receipt may have `previous_receipt_hash = null`.
+
+Run:
 
 ```bash
-python -m pip install jsonschema
+python chain_verify.py sample_allow_receipt.json sample_deny_receipt.json sample_hold_receipt.json
+```
+
+Expected result:
+
+```text
+CHAIN VALID
+```
+
+This proves only that an ordered set of receipts links cleanly by hash. It does not prove total path control. A separate enforcement adapter would be required to prove that consequence-producing actions cannot bypass the receipt boundary.
+
+---
+
+## Tests
+
+Install dependencies:
+
+```bash
+python -m pip install -r requirements.txt
 ```
 
 Run:
@@ -116,37 +141,43 @@ The tests check:
 - HOLD with known admissibility fails
 - tampered receipt body fails hash replay
 - chain mismatch is detectable by comparing expected previous receipt hash
+- ordered chain validates via `chain_verify`
+- first receipt with `previous_receipt_hash = null` is accepted
+- tampered middle receipt breaks chain linkage
+- out-of-order chain is detected
+- corrupted receipt body hash mismatch is detected
 
 ---
 
 ## Claim boundary
 
-This repo proves only a minimal refusal receipt chain.
+This repo proves a minimal replayable receipt layer for ALLOW / DENY / HOLD decisions.
 
-It proves that a receipt, once produced, can be checked against a minimal decision rule and replayed.
+It proves that receipt objects can be checked, replayed, and chain-verified at the size it claims.
 
 This repo does not prove that all consequence paths are forced through this receipt chain.
-
 A separate enforcement adapter would be required to prove that consequence-producing actions cannot bypass the receipt boundary.
+
+This repo does not prove that the described external action was physically prevented; it proves only that the decision receipt records and replays the declared decision state.
 
 It does not prove:
 
+- total path control
 - production enforcement
+- physical prevention
 - full AI governance
 - compliance
 - adoption
 - standard status
 - complete consequence-governance architecture
-- total path control
 
 It is a small proof surface:
 
-> receipt schema → ALLOW / DENY / HOLD examples → replay verifier → tests → CI
+> receipt schema → ALLOW / DENY / HOLD examples → replay verifier → chain verifier → tests → CI
 
 ---
 
 ## Clean line
 
 Language can describe a boundary.
-
 Only an artefact can prove it stops.
